@@ -1,14 +1,15 @@
 .section .rodata
-prompt1: .ascii "Enter first string: "
+prompt1: .ascii "Enter your first string: "
 prompt1_len = . - prompt1
 
-prompt2: .ascii "Enter second string: "
+prompt2: .ascii "Enter your second string: "
 prompt2_len = . - prompt2
 
 outmsg:  .ascii "Hamming distance: "
 outmsg_len = . - outmsg
 
 newline: .byte 10
+
 
 .section .bss
 .lcomm s1, 257
@@ -29,6 +30,7 @@ read_stdin:
     mov $0, %rdi
     syscall
     ret
+
 
 strip_newline_and_len:
     xor %rax, %rax
@@ -63,8 +65,11 @@ count_bits8:
     and $1, %bl
     add %bl, %al
 
+
     shr $1, %dil
     jmp .Lcb_loop
+
+
 
 .Lcb_done:
     movzbl %al, %eax
@@ -83,6 +88,7 @@ u64_to_dec:
     movb $'0', (%rsi)
     mov $1, %rdx
     ret
+
 
 .Lconv_loop:
     xor %rdx, %rdx
@@ -110,10 +116,12 @@ _start:
     call read_stdin
     mov %rax, %r12
 
+
     lea s1(%rip), %rdi
     mov %r12, %rsi
     call strip_newline_and_len
     mov %rax, %r8
+
 
     lea prompt2(%rip), %rsi
     mov $prompt2_len, %rdx
